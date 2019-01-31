@@ -18,10 +18,10 @@ data("WorldCities")
 ### Question 1: 
 This data set has 23,018 observations and 10 variables.  The variables names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, and date.  
 
-glimpse(WorldCities)
-WorldCities <- head(WorldCities, 200) # 200 rows
-country_col <- WorldCities$country
-unique(country_col)
+glimpse(WorldCities)  
+WorldCities <- head(WorldCities, 200) # 200 rows  
+country_col <- WorldCities$country  
+unique(country_col)  
 
 <!--End question 1-->
 
@@ -38,7 +38,7 @@ The unique values in the region column are:
 [13] "America/Argentina/San_Juan" 
 
 
-region_col <- WorldCities$region
+region_col <- WorldCities$region  
 unique(region_col)
 
 <!--End question 2-->
@@ -57,23 +57,23 @@ Country
 104      AO  
 131      AR  
 
-WorldCities %>% select(country) %>% unique()
+WorldCities %>% select(country) %>% unique()  
 
 <!--End question 3-->
 
 ### Histogram example:  
 
-WorldCities %>% ggplot(aes(x = population)) +
+WorldCities %>% ggplot(aes(x = population)) +  
 geom_histogram()
 
 ### Question 4  
 
-WorldCities %>% ggplot(aes(x = population)) +
-  geom_histogram() +
+WorldCities %>% ggplot(aes(x = population)) +  
+  geom_histogram() +  
   xlab('Population Size') +  
   ylab('Count of Cities') +  
   ggtitle('Distribution of City Populations') +  
-  theme_bw() +
+  theme_bw() +  
   theme(plot.title = element_text(hjust = 0.5))
   
   <!--borrowed 'hjust' code from stack overflow-->
