@@ -1,6 +1,6 @@
 ---
 title: "COMPSCIX 415.2 Homework 1"
-author: "AndrewHerman"
+author: "Andrew Herman"
 date: "1/30/2019"
 output: html_document
 ---
@@ -8,23 +8,74 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+My Github repository for my assignments can be found at this URL: [https://github.com/a-herman/compscix-415-2-assignments](https://github.com/a-herman/compscix-415-2-assignments)
 
-## R Markdown
+library(mdsr)
+library(tidyverse)
+“‘{r load_packages, warning=FALSE, message=FALSE}
+data("WorldCities")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### Question 1: 
+This data set has 23,018 observations and 10 variables.  The variables names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, and date.  
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+glimpse(WorldCities)
+WorldCities <- head(WorldCities, 200) # 200 rows
+country_col <- WorldCities$country
+unique(country_col)
 
-```{r cars}
-summary(cars)
-```
+<!--End question 1-->
 
-## Including Plots
+# Question 2:  
 
-You can also embed plots, for example:
+The unique values in the region column are:  
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+[1] "Europe/Andorra"                 "Asia/Dubai"                    
+[3] "Asia/Kabul"                     "America/Antigua"               
+[5] "America/Anguilla"               "Europe/Tirane"                 
+[7] "Asia/Yerevan"                   "Africa/Luanda"                 
+[9] "America/Argentina/Buenos_Aires" "America/Argentina/Cordoba"   
+[11] "America/Argentina/Salta"        "America/Argentina/Tucuman"     
+[13] "America/Argentina/San_Juan" 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+region_col <- WorldCities$region
+unique(region_col)
+
+<!--End question 2-->
+
+### Question 3:
+Here are the unique entries from the country column in WorldCities  
+
+Country  
+1        AD  
+3        AE  
+15       AF  
+65       AG  
+66       AI  
+67       AL  
+87       AM  
+104      AO  
+131      AR  
+
+WorldCities %>% select(country) %>% unique()
+
+<!--End question 3-->
+
+### Histogram example:  
+
+WorldCities %>% ggplot(aes(x = population)) +
+geom_histogram()
+
+### Question 4  
+
+WorldCities %>% ggplot(aes(x = population)) +
+  geom_histogram() +
+  xlab('Population Size') +  
+  ylab('Count of Cities') +  
+  ggtitle('Distribution of City Populations') +  
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+  <!--borrowed 'hjust' code from stack overflow-->
+
+
