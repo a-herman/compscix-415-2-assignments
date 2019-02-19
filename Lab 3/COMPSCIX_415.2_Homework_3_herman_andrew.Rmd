@@ -1,0 +1,142 @@
+---
+title: "COMPSCIX 415.2 Homework 3_herman_andrew"
+author: "AndrewHerman"
+date: "2/18/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+```
+
+# Section 3.8.1: all exercises
+1. What is the problem with this plot? How could you improve it?
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
+```
+This plot is suffering from 'overplotting' due to rounding, which is causing datapoints which are close in value to look identical.  This can be improved by adding the argument "position = jitter".  
+
+2. What parameters to geom_jitter() control the amount of jittering?  
+
+Based on the  ?geom_jitter() documentation, the Width and Height parameters would control the amount of jittering.  
+
+3. Compare and contrast geom_jitter() with geom_count().  
+
+Based on the documentation:
+geom_jitter:"Adds a small amount of random variation to the location of each point"
+geom_count: "Counts the number of observations at each location, then maps the count to point area."
+
+The count function may be more accurate because the size of the point changes based on the number of observations at each location, rather than adding random variation.  However, if there are enough observations nearby, the count function may result in further overplotting.
+
+4. What’s the default position adjustment for geom_boxplot()? Create a visualisation of the mpg dataset that demonstrates it.  
+
+The default positoin is dodge2 (see ?geom_boxplot()).  Here is an example of the boxplot:
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot()
+```
+
+# Section 3.9.1: #2 and #4 only  
+
+2. What does labs() do? Read the documentation.
+
+The labs() functions allows the user to add, remove, and specify labels for the chart.
+
+4. What does the plot below tell you about the relationship between city and highway mpg? Why is coord_fixed() important? What does geom_abline() do?
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed()
+```
+
+This plot tells me that there is a strong positive correlation between cty and hwy.  
+
+The coord_fixed() function ensure that the x/y axes are on the same scale, which is important to visually interpret the relationship between the two observations.
+
+The geom_abline() function adds a reference line to the chart.  This line helps to make the correlation of the datapoints more pronounced.
+
+# Section 4.4: #1 and #2 only
+
+1. This code does not work because we are calling my_var1able instead of my_variable.  The 'i' is replced with a '1'.
+
+2. There are typos in the code:
+
+fliter(mpg, cyl = 8) ---> should be "filter"
+
+filter(diamond, carat > 3) ---> should be "diamonds"
+
+
+# Section 5.2.4: #1, #3 and #4 only
+
+1. Find all flights that:
+Had an arrival delay of two or more hours
+```{r}
+filter(flights,arr_delay >= 120)
+```
+
+Flew to Houston (IAH or HOU)
+```{r}
+filter(flights, dest == "IAH" | dest == "HOU")
+```
+
+Were operated by United, American, or Delta
+```{r}
+filter(flights, carrier == "AA" | carrier == "UA" | carrier == "DL")
+```
+
+Departed in summer (July, August, and September)
+```{r}
+filter(flights, month == "7" | month == "8" | month == "9")
+```
+
+Arrived more than two hours late, but didn’t leave late
+```{r}
+filter(flights,arr_delay >= 120 & dep_delay <=0)
+```
+
+Were delayed by at least an hour, but made up over 30 minutes in flight
+```{r}
+filter(flights,dep_delay >= 60 & arr_delay <=30)
+```
+
+Departed between midnight and 6am (inclusive)
+```{r}
+filter(flights,dep_time == 2400 | dep_time <=0600)
+```
+
+
+3. How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
+```{r}
+filter(flights,is.na(dep_time))
+```
+The other variables that are also NA are dep_delay, arr_time, arr_delay, and air_time.  These rows may represent cancelled flights.
+
+4.Why is NA ^ 0 not missing? Why is NA | TRUE not missing? Why is FALSE & NA not missing? Can you figure out the general rule? (NA * 0 is a tricky counterexample!)
+
+Any number raised to the 0 is equal to 1, so it would not be missing.
+
+# Section 5.4.1: #1 and #3 only
+
+1. Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights.
+```{r}
+select(flights, dep_time, dep_delay, arr_time, arr_delay)
+```
+
+```{r}
+select(flights, starts_with("dep"), starts_with("arr"))
+```
+
+3.What does the one_of() function do? Why might it be helpful in conjunction with this vector?
+
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+one_of() allows you to select fields from a defined variable.  In this example, we can simply use "vars" in a select function to only query these fields.
