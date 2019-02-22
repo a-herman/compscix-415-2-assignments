@@ -1,0 +1,181 @@
+---
+title: "COMPSCIX 415.2 Homework 4_herman_andrew"
+author: "AndrewHerman"
+date: "2/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+```
+
+#Section 5.6.7: #2, #4 and #6 only. Extra Credit: Do #5
+
+2) Come up with another approach that will give you the same output as not_cancelled %>% count(dest) and not_cancelled %>% count(tailnum, wt = distance) (without using count()).
+
+
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>%
+group_by(dest) %>%
+summarise(n = n())
+```
+
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>%
+group_by(tailnum) %>%
+summarise(n = n())
+```
+
+4) Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+There is a positive correlation between cancellated flight the average delay.  As the delay increases, the number of cacnelled flights also increases.
+
+```{r}
+can_del <-
+  flights %>%
+  mutate(cancelled = (is.na(arr_delay) | is.na(dep_delay))) %>%
+  group_by(month, day) %>%
+  summarise(avg_cancelled = mean(cancelled), avg_dep_delay = mean(dep_delay, na.rm = TRUE))
+
+ggplot(can_del, aes(x = avg_dep_delay, avg_cancelled)) +
+  geom_jitter()
+```
+
+
+6) What does the sort argument to count() do. When might you use it?
+
+The Sort argument will sort output in descending order of n.  This will allow you to have cleaner code if you want to sort from largest to smallest value.
+
+5) Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
+
+```{r}
+can_del <-
+  flights %>%
+  #mutate(cancelled = (is.na(arr_delay) | is.na(dep_delay))) %>%
+  group_by(carrier, dest) %>%
+  summarise(avg_dep_delay = mean(dep_delay, na.rm = TRUE))
+
+ggplot(can_del, aes(x = carrier, y = dest)) +
+  geom_point(aes(size = avg_dep_delay))
+```
+
+This is not a good chart because it implies that UA, EV, and 9E have the most delays, whereas the reasoning behind it is that they also serve the most destinations.  The Y axis labels are are too campped and difficult to read.
+
+#Section 10.5: #1, #2, #3 and #6 only
+
+1) How can you tell if an object is a tibble? (Hint: try printing mtcars, which is a regular data frame).
+
+The table will say "A tibble" along with the number of rows / columns.  Tibbles also tell you what datatype is including in each vector.
+
+2) Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?
+
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+```
+
+```{r}
+as_tibble(df)
+```
+
+The default dataframe may display more information than is easily readable on the screen.  The tibble will only display 10 rows of data and enough vectors that fit on the screen.
+
+3) If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?
+
+You would use double brackets to extract the variable.
+
+6) What option controls how many additional column names are printed at the footer of a tibble?
+
+n_extra is used to print additional columns.
+
+#Section 12.3.3: #2, #3 and #4 only
+
+2) Why does this code fail?
+
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+Error in inds_combine(.vars, ind_list): Position must be between 0 and n
+
+This code fails because the column hearders 1999 and 2000 need to be in single quotes so that the code knows these are strings, not numbers.
+
+3) Why does spreading this tibble fail? How could you add a new column to fix the problem?
+
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+```
+
+Spreading this tibble fails because there are multiple rows with an age value for Phillip Woods.  We could solve this by adding an additional column that would make the row unique, such as weight (so long as there are different weight values)
+
+4) Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+preg %>%
+  gather(`male`,`female`, key = "sex", value = Counts, na.rm = TRUE )
+
+```
+
+Gathering the data will help create a new vector called "sex", with values of male or female.  This is cleanern because the sex is an observation with an associated value.
+
+#Section 12.4.3: #1 and #2 only
+
+1) What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.
+
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"))
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"), fill = "left")
+```
+
+Fill allows you to fill in missing values, while extra allows you to remove or merge the extra values.
+
+2) Both unite() and separate() have a remove argument. What does it do? Why would you set it to FALSE?
+
+The 'remove' argument removes input columns from the data table. Settting it to FALSE would create a new variable, but keep the old one.
+
+
+Follow these steps:
+- Download the baby_names.txt file from Canvas which is in the Homework 4 assignment section.
+- Load this file into R correctly and take a glimpse of the output.
+- Export this file as a csv file and call it ‘baby_names.csv’.
+- Reload the baby_names.csv file and take another glimpse.
+- Show all of your code and the output. There should be two data import lines of code, one data export line of code, and two glimpses of the data.
+
+```{r}
+babynames <- read_csv("/Users/aherman/Downloads/baby_names.txt")
+glimpse(babynames)
+write_tsv(babynames, "/Users/aherman/Downloads/baby_names.csv")
+babynames <- read_csv("/Users/aherman/Downloads/baby_names.csv")
+glimpse(babynames)
+```
+
