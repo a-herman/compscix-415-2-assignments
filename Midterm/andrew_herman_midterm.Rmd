@@ -1,0 +1,18 @@
+---
+title: "COMPSCIX 415.2 Homework 5/Midterm-Andrew Herman"
+author: "AndrewHerman"
+date: "2/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+```
+
