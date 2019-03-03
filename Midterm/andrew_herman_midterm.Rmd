@@ -21,34 +21,50 @@ library(dplyr)
 library(tibble)
 ```
 
+# Git and Github (1.5 points)
+The code for my midterm can be found on my [github repository](https://github.com/a-herman/compscix-415-2-assignments/tree/master/Midterm).
 
 # The tidyverse packages (3 points)
-1. Can you name which package is associated with each task below?  
--Plotting - ggplot2  
--Data munging/wrangling - dplyr  
--Reshaping (speading and gathering) data - tidyr  
--Importing/exporting data - readr  
+#### 1. Can you name which package is associated with each task below?  
+##### Plotting 
+ggplot2
 
-2. Now can you name two functions that you’ve used from each package that you listed above for these tasks?  
--Plotting - ggplot2 - 'aes' is used to construct aesthetic mappings, while 'geom_boxplot' will plot a box and whiskers chart.  
--Data munging/wrangling - dplyr - 'group_by' is used to group one or more variables, while 'n' will provide the total number of observations in the declared dataset.   
--Reshaping data - tidyr - 'gather' is used to turn column names into actual variables.  We are able to then rename the new columns to something more appropriate.  'spread' is used to collapse multiple rows into a single row, while adding new columns, or keys.  
--Importing/exporting data - readr - 'read_csv' will read a csv file and import the data in RStudio for analysis.  'write_csv' will write the data to a new csv file.
+##### Data munging/wrangling
+dplyr
+
+##### Reshaping (speading and gathering) data
+tidyr
+
+##### Importing/exporting data
+readr
+
+#### 2. Now can you name two functions that you’ve used from each package that you listed above for these tasks?  
+##### Plotting - ggplot2 
+'aes' is used to construct aesthetic mappings, while 'geom_boxplot' will plot a box and whiskers chart.  
+
+##### Data munging/wrangling - dplyr 
+'group_by' is used to group one or more variables, while 'n' will provide the total number of observations in the declared dataset.   
+
+##### Reshaping data - tidyr 
+'gather' is used to turn column names into actual variables.  We are able to then rename the new columns to something more appropriate.  'spread' is used to collapse multiple rows into a single row, while adding new columns, or keys.  
+
+##### Importing/exporting data - readr 
+'read_csv' will read a csv file and import the data in RStudio for analysis.  'write_csv' will write the data to a new csv file.
 
 # R Basics (1.5 points)
-1. Fix this code with the fewest number of changes possible so it works:  
+#### 1. Fix this code with the fewest number of changes possible so it works:  
 `My_data.name___is.too00ooLong! <- c( 1 , 2   , 3 )`
 ```{r}
 My_data.name___is.too00ooLong <- c( 1 , 2   , 3 )
 ```
 
-2. Fix this code so it works:  
+#### 2. Fix this code so it works:  
 `my_string <- C('has', 'an', 'error', 'in', 'it)`
 ```{r}
 my_string <- c('has', 'an', 'error', 'in', 'it')
 ```
 
-3. Look at the code below and comment on what happened to the values in the vector.  
+#### 3. Look at the code below and comment on what happened to the values in the vector.  
 
 ```{r}
 my_vector <- c(1, 2, '3', '4', 5)
@@ -58,14 +74,14 @@ my_vector
 In the above code, R was confused because the vector had both number and text strings.  There must be only one type of data in a vector as opposed to multiple types.
 
 # Data import/export (3 points)
-1. Download the rail_trail.txt file from Canvas (in the Midterm Exam section) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.
+#### 1. Download the rail_trail.txt file from Canvas (in the Midterm Exam section) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.
 
 ```{r}
 rail_trail <- read_csv("/Users/aherman/Downloads/rail_trail.txt")
 glimpse(rail_trail)
 ```
 
-2. Export the file into a comma-separated file and name it “rail_trail.csv”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.
+#### 2. Export the file into a comma-separated file and name it “rail_trail.csv”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.
 
 ```{r}
 write_csv(rail_trail, "/Users/aherman/Downloads/rail_trail.csv")
@@ -74,17 +90,17 @@ glimpse(rail_trail)
 ```
 
 # Visualization (6 points)
-1. Critique this graphic: give only three examples of what is wrong with this graphic. Be concise.
+#### 1. Critique this graphic: give only three examples of what is wrong with this graphic. Be concise.
 ```{r pressure, echo=FALSE, fig.cap="", out.width = '45%'}
 knitr::include_graphics("/Users/aherman/Downloads/RMidterm_Image1.jpeg")
 ```
 
 Three examples of problems with this image are:  
 1.1 - The percentage numbers do not add up to 100% for each horizontal category  
-1.2 - There are two separate vectors on the chart (Age and Sex), however the chart layout leads the reader to compare there directly against eachother (e.g. Women vs. Under 45)  
-1.3 - There is no organization to the color coding.  The Sex vector has separate colors, but the Age vector is a single color.
+1.2 - There are two separate vectors on the chart (Age and Sex), however the chart layout leads the reader to compare them directly against eachother (e.g. Women vs. Under 45)  
+1.3 - The color coding approach is not consistent.  The Sex vector has separate colors, but the Age vector is a single color.
 
-2. Reproduce this graphic using the diamonds data set.
+#### 2. Reproduce this graphic using the diamonds data set.
 
 ```{r}
 ggplot(data = diamonds, mapping = aes(x = cut, y = carat)) +
@@ -95,8 +111,9 @@ ggplot(data = diamonds, mapping = aes(x = cut, y = carat)) +
     x = "CUT OF DIAMOND"
   )
 ```
+*Note my default color theme has been changed resulting in a slight difference from the origianl graphic
 
-3. The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.
+#### 3. The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.
 
 ```{r}
 ggplot(data = diamonds, mapping = aes(x = cut, y = carat)) +
@@ -113,7 +130,7 @@ I added a limit to the y-axis (the x-axis prior to flipping the coordinates) to 
 
 # Data munging and wrangling (6 points)
 
-1. Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.
+#### 1. Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.
 
 ```{r}
 head(table2)
@@ -126,13 +143,11 @@ table2 %>%
   spread(key = type, value = count)
 ```
 
-2. Create a new column in the diamonds data set called price_per_carat that shows the price of each diamond per carat (hint: divide). Only show me the code, not the output.
+#### 2. Create a new column in the diamonds data set called price_per_carat that shows the price of each diamond per carat (hint: divide). Only show me the code, not the output.
 
 `diamonds <- mutate(diamonds, price_per_carat = price / carat)`
 
-3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit.  
--Do the results make sense? Why?  
--Do we need to be wary of any of these numbers? Why?  
+#### 3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit.  
 
 ```{r}
 diamonds %>%
@@ -148,38 +163,39 @@ diamonds %>%
   ) 
 ```
 
+##### Do the results make sense? Why?  
 The results make sense for two reasons:  
-- The number of diamonds above the $10000 price point increases as the cut increases  
-- The overall proportion is a fairly small number across the board, since the size is very small which also impacts pricing  
+- The number of diamonds above the $10000 price point increases as the cut increases.  Cut quality and price have a strong positive correlation.  
+- The overall proportion is fairly small across all groups.  This is expected, because all of the diamonds are small in size, and diamond size is a major factor impacting prices
 
+##### Do we need to be wary of any of these numbers? Why? 
 I would be cautious of this data because it is very rare for a diamond to be so expensive, yet so small.  These observations may be errors, or there could be something else causing the price to spike, such as blue, yellow, or other ultra rare colored diamonds being present in the dataset.
 
 # EDA (6 points)
 
-1. During what time period is this data from?  
+#### 1. During what time period is this data from?  
 `summary(txhousing)`  
 The observations in the data take place from January 2000 to December 2015.
 
-2. How many cities are represented?  
+#### 2. How many cities are represented?  
 `txhousing %>%`
   `count(city)`  
 There are 46 unique cities.
 
-3. Which city, month and year had the highest number of sales?  
+#### 3. Which city, month and year had the highest number of sales?  
 `arrange(txhousing, desc(sales))`  
 In July 2015, Houston had the greatest number of sales with 8945.
 
-4. What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.  
+#### 4. What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.  
 
 ```{r}
 ggplot(data = txhousing, mapping = aes(x = sales, y = listings)) + 
-  geom_point()
+  geom_jitter()
 ```
 
 There is a strong positive correlation between number of listings and number of sales.
 
-
-5. What proportion of sales is missing for each city?
+#### 5. What proportion of sales is missing for each city?
 
 ```{r}
 txhousing %>%
@@ -191,8 +207,8 @@ txhousing %>%
   ) 
 ```
 
-6.Looking at only the cities and months with greater than 500 sales:  
--Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.
+#### 6. Looking at only the cities and months with greater than 500 sales:  
+##### Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.
 
 ```{r}
 data2 <- filter(txhousing, sales > 500)
@@ -204,14 +220,13 @@ ggplot(data = data2, mapping = aes(x = city, y = median)) +
 
 The distribution of median home prices is different when grouped by city.
 
-
--Any cities that stand out that you’d want to investigate further?
+##### Any cities that stand out that you’d want to investigate further?
 
 In the above chart, we can easily see a large number of outliers in Dallas, and Collin County.  The outliers in Collin County are very high, and should warrant additinal analysis.
 
 Additionally, Corpus Christi has a very small range of values.  It would be a good idea to check the number of observations in this city to ensure there is an appropriate sample size.
 
--Why might we want to filter out all cities and months with sales less than 500?
+##### Why might we want to filter out all cities and months with sales less than 500?
 
 ```{r}
 ggplot(data = txhousing, mapping = aes(x = city, y = median)) + 
