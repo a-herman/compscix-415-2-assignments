@@ -1,0 +1,51 @@
+---
+title: "Homework_7_herman_andrew"
+author: "AndrewHerman"
+date: "3/17/2019"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+library(tibble)
+library(mosaicData)
+library(broom)
+```
+# Exercise 1  
+Load the train.csv dataset into R. How many observations and columns are there?
+
+```{r}
+train_data <- read_csv("/Users/aherman/Downloads/train.csv")
+nrow(train_data)
+ncol(train_data)
+```
+
+The train dataset has 1460 observations and 81 variables.
+
+# Exercise 2  
+
+1) Visualize the distribution of SalePrice.  
+```{r}
+ggplot(train_data, aes(x = SalePrice)) +
+  geom_histogram()
+```
+
+2) Visualize the covariation between SalePrice and Neighborhood.  
+```{r}
+ggplot(train_data, aes(x = SalePrice, y = Neighborhood)) +
+  geom_point()
+```
+
+3) Visualize the covariation between SalePrice and OverallQual.  
+```{r}
+ggplot(train_data, aes(x = SalePrice, y = OverallQual)) +
+  geom_point()
+```
