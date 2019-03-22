@@ -1,0 +1,26 @@
+---
+title: "Homework_8_herman_andrew"
+author: "AndrewHerman"
+date: "3/21/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+library(tibble)
+library(mosaicData)
+library(broom)
+library (rvest)
+library(jsonlite)
+library(rgdal)
+library(ggmap)
+library(leaflet)
+```
+
