@@ -17,10 +17,44 @@ library(dplyr)
 library(tibble)
 library(mosaicData)
 library(broom)
-library (rvest)
+library(rvest)
 library(jsonlite)
 library(rgdal)
 library(ggmap)
 library(leaflet)
+library(shiny)
 ```
+
+Create an R function that takes as its input argument a city name and creates a slippy leaflet map as its output. The leaflet map should already be zoomed in onto the city that is input into the function and should contain markers for each of the bike station locations, and each marker should show the number of bikes when hovered over by the mouse cursor (see example below). Feel free to add your own flourishes to the map.
+
+Name your function map_it. To pull the data, you will use the fromJSON function (set the flatten argument to TRUE).
+
+```{r}
+
+
+map_it <- function(city_name) {
+  url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract_name=",city_name,"&apiKey=dee4144675ac73ade0eb306b09ac25dfcdf5dd3f")
+          alldata <- jsonlite::fromJSON(url) %>%
+            flatten(recursive = TRUE)
+  
+  alldata_df <- as.data.frame(alldata) %>%
+    mutate(lon = position.lng, lat = position.lat ) %>%
+    filter(contract_name == city_name)
+  
+  mystations <- as_tibble(alldata_df)
+  
+  #available_bikes
+  #popup = ~available_bikes
+  
+  map1 <- leaflet(mystations) %>%
+    addTiles() %>%
+    addMarkers(label = ~as.character(available_bikes))
+  
+  return (map1)
+}
+
+map_it("Marseille")
+
+```
+
 
