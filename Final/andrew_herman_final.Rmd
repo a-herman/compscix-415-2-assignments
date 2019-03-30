@@ -1,0 +1,196 @@
+---
+title: "andrew_herman_final"
+author: "AndrewHerman"
+date: "3/28/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(nycflights13)
+library(dplyr)
+library(tibble)
+library(mosaicData)
+library(broom)
+library(rvest)
+library(jsonlite)
+library(rgdal)
+library(ggmap)
+library(leaflet)
+library(shiny)
+```
+
+# Exercise 1 - Sampling Distributions, Functions and For Loops (10 points)  
+
+## Step 1  
+Write an R function that does the following:  
+-Takes a sample of size samp_size from this exponential distribution (samp_size is an input parameter for the function)  
+-Calculates the mean of that sample  
+-Calculates the standard deviation of that sample  
+-Returns the calculated mean and standard deviation as a list  
+
+```{r}
+
+samp_fun <- function(samp_size, samp_rate) {
+  
+  samp1 <- rexp(n = samp_size, rate = samp_rate)
+  
+  samp_avg <-mean(samp1)
+  samp_std_dev <- sd(samp1)
+  
+  stats <- list(samp_avg = samp_avg, samp_std_dev = samp_std_dev)
+  return(stats)
+}
+
+samp_fun(100, 1/10000)
+```
+
+## Step 2
+Then write a loop that does this:  
+Runs the above function 1000 times, with samp_size = 50 and samp_rate = 1/10000
+Saves all of the sample means in a vector called sample_means, and all of the sample standard deviations in a vector called sample_sds
+
+```{r}
+samp_fun <- function(samp_size, samp_rate) {
+
+  x <- 1000
+  sample_means <- rep(NA, x)
+  sample_sds <- rep(NA, x)
+
+  for (i in 1:x) {
+    samp1 <- rexp(n = samp_size, rate = samp_rate)
+    
+    samp_avg <- mean(samp1)
+    samp_std_dev <- sd(samp1)
+  
+    sample_means[i] <- samp_avg
+    sample_sds[i] <- samp_std_dev
+
+  }
+
+  results <- list(sample_means = sample_means, sample_sds = sample_sds)
+  return(results)  
+
+}
+samp_fun(50, 1/10000)
+```
+
+
+## Step 3  
+
+### Plot your sample means as a histogram  
+
+```{r}
+step3data <- samp_fun(50, 1/10000)
+
+sample_means_L <- step3data[1]
+sample_sds_L <- step3data[2]
+
+sample_means_df <- data.frame("sample_means" = step3data[1])
+sample_sds_df <- data.frame("sample_sds" = step3data[2])
+
+ggplot(data = sample_means_df, aes(x = sample_means)) +
+  geom_histogram()
+
+```
+
+
+### Output the standard deviation of your sample means  
+
+```{r}
+samp_mean_stdev <- sd(sample_means_df$sample_means)
+samp_mean_stdev
+```
+
+### Calculate the theoretical standard error (σ=10000, n = sample size)  
+
+
+
+### Calculate the mean of the sample standard deviations and use this to calculate the empirical standard error  
+
+
+
+
+
+## Step 4  
+Repeat STEP 2 and STEP 3 using a sample size of 5000.
+
+
+
+```{r}
+
+```
+
+
+
+# Exercise 2 - Linear Regression (5 points)  
+
+## Load the train.csv dataset into R and fit a regression model with:
+y = SalePrice  
+Features: LotArea, OverallQual, and ExterQual  
+
+```{r}
+train <- read_csv("/Users/aherman/Downloads/train.csv")
+
+train_reg <- lm(SalePrice ~ LotArea + OverallQual + ExterQual, data = train)
+
+
+```
+
+## Use the broom package to output the coefficients and the R-squared
+
+```{r}
+glance(train_reg)
+tidy(train_reg)
+```
+
+## Interpret the coefficient on LotArea  
+LotArea is statistically significant.  For every squre foot increase in Lot size, the average sale prie increaed by $1.45, assuming all else is equal.  
+
+## Interpret the coefficient on ExterQualGd
+The mean difference in sale price for a Good exterior quality and an Excellent exterior quality is -71,529 dollars.  In other words, with all else equal, going from an Excellent to a Good will result in a sales price decrease of 71,529 dollars.
+
+## Compare this model to the model we fit in HW 7 with GrLivArea, OverallQual, Neighborhood. Which is the better fitting model?  
+The R-squared from the model in HW 7 is equal to .78.  The R-squared in this model is .69, which indicates this model is less accurate.
+
+# Exercise 3 - AB Testing (5 points)  
+We want to perform an AB test on this data to see if the conversion rates are different for the two versions of the webpage.
+
+Answer these questions:
+
+## What proportion of visitors converted for each version of the webpage?
+
+```{r}
+testdata <- read_csv("/Users/aherman/Downloads/ab_test_data.csv")
+
+proportions <- testdata %>%
+  group_by(version) %>%
+  summarise(tot_conversions = sum(conversion), prop_conversion = mean(conversion))
+proportions 
+
+```
+
+4.15% of visitors converted for version A, while 10% of visitors converted for version B.
+
+## Perform the AB test in R. What is the p-value for the AB test (hypothesis test of proportions)?
+
+```{r}
+true_a <- .0415
+true_b <- .1
+n_a <- 1000
+n_b <- 1000
+
+set.seed(10)
+samp_a <- rbinom(n = 1, size = n_a, prob = true_a)
+samp_b <- rbinom(n = 1, size = n_b, prob = true_b)
+
+two_prop_test <- prop.test(c(samp_a, samp_b), c(1000, 1000))
+two_prop_test$p.value
+```
+The p-value is less than .05, therefore we know that the conversion rates between version A and B are significantly different.
+
