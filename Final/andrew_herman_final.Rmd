@@ -88,14 +88,13 @@ samp_fun(50, 1/10000)
 ```{r}
 step3data <- samp_fun(50, 1/10000)
 
-sample_means_L <- step3data[1]
-sample_sds_L <- step3data[2]
-
 sample_means_df <- data.frame("sample_means" = step3data[1])
 sample_sds_df <- data.frame("sample_sds" = step3data[2])
 
-ggplot(data = sample_means_df, aes(x = sample_means)) +
+small_samp <- ggplot(data = sample_means_df, aes(x = sample_means)) +
   geom_histogram()
+
+small_samp
 
 ```
 
@@ -109,24 +108,67 @@ samp_mean_stdev
 
 ### Calculate the theoretical standard error (σ=10000, n = sample size)  
 
+```{r}
+
+stdev <- 10000
+n <- nrow(sample_means_df)
+
+std_err <- stdev / sqrt(n)
+std_err
+```
 
 
 ### Calculate the mean of the sample standard deviations and use this to calculate the empirical standard error  
 
+```{r}
 
+stdev_mean <- mean(sample_sds_df$sample_sds)
+stdev_mean
 
+```
 
 
 ## Step 4  
 Repeat STEP 2 and STEP 3 using a sample size of 5000.
 
-
-
 ```{r}
+samp_fun <- function(samp_size, samp_rate) {
 
+  x <- 1000
+  sample_means <- rep(NA, x)
+  sample_sds <- rep(NA, x)
+
+  for (i in 1:x) {
+    samp1 <- rexp(n = samp_size, rate = samp_rate)
+    
+    samp_avg <- mean(samp1)
+    samp_std_dev <- sd(samp1)
+  
+    sample_means[i] <- samp_avg
+    sample_sds[i] <- samp_std_dev
+
+  }
+
+  results <- list(sample_means = sample_means, sample_sds = sample_sds)
+  return(results)  
+
+}
+samp_fun(5000, 1/10000)
 ```
 
+```{r}
+step3data <- samp_fun(5000, 1/10000)
 
+sample_means_df <- data.frame("sample_means" = step3data[1])
+sample_sds_df <- data.frame("sample_sds" = step3data[2])
+
+big_samp <- ggplot(data = sample_means_df, aes(x = sample_means)) +
+  geom_histogram()
+
+small_samp
+big_samp
+
+```
 
 # Exercise 2 - Linear Regression (5 points)  
 
@@ -144,9 +186,14 @@ train_reg <- lm(SalePrice ~ LotArea + OverallQual + ExterQual, data = train)
 
 ## Use the broom package to output the coefficients and the R-squared
 
+Here are the coefficients:
+```{r}
+tidy(train_reg)
+```
+
+Here is the R-squared:
 ```{r}
 glance(train_reg)
-tidy(train_reg)
 ```
 
 ## Interpret the coefficient on LotArea  
