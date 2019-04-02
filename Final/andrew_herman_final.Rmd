@@ -170,6 +170,8 @@ big_samp
 
 ```
 
+The chart with a larger sample size has smaller tails.  There are are greater number of observations closer to the middle of the chart (10,000), which is the true mean. As we continue to increase the sample size, the chart will normalize further.
+
 # Exercise 2 - Linear Regression (5 points)  
 
 ## Load the train.csv dataset into R and fit a regression model with:
